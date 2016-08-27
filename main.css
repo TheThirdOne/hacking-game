@@ -1,0 +1,47 @@
+#terminal {
+  min-height:20em;
+  float: left;
+  width: 50%;
+  /*margin: auto;*/
+  font-weight: bolder;
+  font-family:"monofonto";
+  color: white;
+  background-color:black;
+}
+
+#inspector {
+  /*margin: auto;*/
+  margin-left:10%;
+  float: left;
+  width: 40%;
+  font-weight: bolder;
+  font-family:"monofonto";
+  color: white;
+  background-color:black;
+}
+
+table, tr, td {
+  color: white;
+}
+
+
+#cursor {
+  width:.5em;
+  height:1em;
+  background-color: darkred;
+  display: inline-block;
+}
+
+.inner {
+  display: inline-block;
+}
+@font-face {
+  font-family: "monofonto";
+  src: url("monofonto.ttf");
+}
+
+@keyframes blink {
+    0%   {background-color: black;}
+    50%  {background-color: yellow;}
+    100%  {background-color: black;}
+}
