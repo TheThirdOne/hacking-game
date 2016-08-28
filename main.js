@@ -202,6 +202,9 @@ function initInput(input){
   var keys = {};
   document.onkeydown = function(e){
     if(document.activeElement.id === "terminal"){
+      if(e.key === ' '){
+        e.preventDefault();
+      }
       if(!keys[e.key]){
         if(e.key === 'Enter'){
           input('\n');
