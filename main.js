@@ -66,7 +66,7 @@ function initMem(){
       cell.innerHTML = toHex(memory[row*16+offset*2])+toHex(memory[row*16+offset*2+1]);
     }
     cell.style.animation='none';
-    setTimeout(()=>cell.style.animation='blink .2s',0);
+    setTimeout(()=>cell.style.animation='blink .1s',0);
   };
   return function(ptr,val){
     if(val !== undefined){
@@ -82,6 +82,9 @@ function initCPU(term,mem){
   var memory = [];
   memory.length = 16*table.rows.length; memory.fill(0); //fill memory with 16*20 0's
   var i = 0,stdin, buffer;
+  var Q = function(f,...args){ //wraps and binds args
+    return new Promise(res=>f(...args,res));
+  };
   var printStr = function(ptr,callback){
     var val = mem(ptr);
     if(val!==0){
@@ -92,7 +95,7 @@ function initCPU(term,mem){
     }
   };
   var cmpStr = function(ptr,ptr2,callback){
-    console.log('comapring ', ptr, 'to',ptr2)
+    console.log('comapring ', ptr, 'to',ptr2);
     var val = mem(ptr), val2 = mem(ptr2);
     if(val === val2){
       if(val === 0){
@@ -108,7 +111,7 @@ function initCPU(term,mem){
     if(buffer[i]){
       console.log('reading from const buffer',buffer[i]);
       if(buffer[i] == '\t'){
-        console.log('should end')
+        console.log('should end');
         mem(ptr,0);
         i++;
         wait(200).then(callback);
@@ -152,23 +155,21 @@ function initCPU(term,mem){
   
   var init = function(){
     loop = function(){
-            printStr(0,function(){
+            Q(printStr,0).then(function(){
               buffer = ''; i = 0;
-              loadUser(43,function(){
-                  cmpStr(31,43,function(success){
+              Q(loadUser,43).then(()=>Q(cmpStr,31,43)).then(function(success){
                     if(success){
-                      printStr(11,()=>false)
+                      printStr(11,()=>0)
                     }else{
                       printStr(21,loop)
                     }
-                  })
-                });
-              })
+                  });
+              });
             };
-    Promise.all([new Promise(resolve=>loadStr(0,'Password: \t',0,resolve)),
-                 new Promise(resolve=>loadStr(11,'Success!\n\t',0,resolve)),
-                 new Promise(resolve=>loadStr(21,'Failure!\n\t',0,resolve)),
-                 new Promise(resolve=>loadStr(31,'Hello World\t',0,resolve))]).then(loop);
+    Promise.all([Q(loadStr,0,'Password: \t',0),
+                 Q(loadStr,11,'Success!\n\t',0),
+                 Q(loadStr,21,'Failure!\n\t',0),
+                 Q(loadStr,31,'Hello World\t',0)]).then(loop);
   };
   init();
   return function(val){
