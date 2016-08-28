@@ -1,20 +1,15 @@
 function initTerm(){
   var terminal = document.getElementById("terminal");
-  terminal.onfocus = function(){
-    document.getElementById('cursor').style.display = 'inline-block';
-  };
-  terminal.onblur = function(){
-    document.getElementById('cursor').style.display = 'none';
-  };
   var current = terminal.children[terminal.children.length-1];
   var buffer = "";
   var newLine = function(){
     current.innerHTML = "<div class=\"inner\">" + buffer.replace(/  /g,' &#160;').replace(/&#160; /g,'&#160;&#160;') + "</div>";
     current = document.createElement('div');
-    current.class = 'line';
+    current.className = 'line';
     buffer = '';
     writeBuffer();
     terminal.appendChild(current);
+    terminal.scrollTop = terminal.scrollHeight;
   };
   var writeBuffer = function(){
     current.innerHTML = "<div class=\"inner\">" + buffer.replace(/  /g,' &#160;').replace(/&#160; /g,'&#160;&#160;') + "<div id=\"cursor\"></div></div>";
@@ -273,7 +268,7 @@ var levels = [{mem:[80, 97, 115, 115, 119, 111, 114, 100, 58, 32, 0, 83, 117, 99
                              Q(state.loadStr,21,'Failure!\n\t',0),
                              Q(state.loadStr,45,'Hello World\t',0)]).then(loop);*/
               }},{mem:[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0],
-              description:"End of the game; come back for more later or check github.com/thethirdone/hacking-game to look at the source\n",
+              description:"End of the game; come back for more later or check <a href=\"https://github.com/thethirdone/hacking-game\">Github</a> to look at the source\n",
               code: function(state){}}
               
               ];
